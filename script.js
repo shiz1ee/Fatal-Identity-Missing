@@ -1,7 +1,7 @@
 const output = document.getElementById("output");
 const promptEl = document.getElementById("prompt");
 const input = document.getElementById("input");
-const inputline = document.getElementById("input-line");
+const inputLine = document.getElementById("input-line");
 
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -19,7 +19,7 @@ async function typeLine(text, className = "", speed = 45) {
 }
 
 function addLine(text, className = "") {
-    const line = decodeURIComponent.createElement("div");
+    const line = document.createElement("div");
     line.textContent = text;
     if (className) line.className = className;
     output.appendChild(line);
@@ -40,8 +40,8 @@ function startAudio() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     //pls get scared
-    const osc = audioCtx.creeateOscillator();
-    const filter = audioCtx.createBiwuadFilter();
+    const osc = audioCtx.createOscillator();
+    const filter = audioCtx.createBiquadFilter();
     const gain = audioCtx.createGain();
 
     osc.type = "sawtooth";
@@ -119,7 +119,7 @@ async function intro() {
         subjectName = name;
     }
 
-    await subjectName();
+    await scan();
 }
 
 async function scan() {
@@ -127,7 +127,7 @@ async function scan() {
     await typeLine("Searching the registry", "", 40);
     for (let i = 0; i < 3; i++) {
         await sleep(400);
-        output.lastChild.textContent =+ ".";
+        output.lastChild.textContent += ".";
     }
     await sleep(600);
 
@@ -147,5 +147,7 @@ async function scan() {
     //TODOOOOo identiy choice screen uhj previos namer n al 
     
 }
+
+intro();
 
 
