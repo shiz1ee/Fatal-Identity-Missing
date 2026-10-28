@@ -1,0 +1,62 @@
+:root {
+    --red: #ff2a2a;
+    --red-dim: #8a1111;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+    background: #000;
+    color: var(--red);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1rem;
+    overflow: hidden;
+}
+
+#terminal {
+    padding: 2rem;
+    height: 100%;
+    overflow-y: auto;
+}
+
+#output div {
+    margin: 0.4rem 0;
+    white-space: pre-wrap;
+    text-shadow: 0 0 6px var(--red-dim);
+}
+
+.error {
+    color: #ff0000;
+    text-shadow: 0 0 10px #ff0000;
+}
+
+.input-line {
+    display: flex;
+    align-items: center;
+    margin-top: 0.8rem;
+}
+
+#input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--red);
+    font: inherit;
+    flex: 1;
+    caret-color: var(--red);
+}
+
+#input-line::after {
+    content: "";
+}
+
+.blackout {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 10;
+}
