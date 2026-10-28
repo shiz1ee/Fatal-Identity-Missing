@@ -6,6 +6,13 @@ const inputLine = document.getElementById("input-line");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+async function glitchScreen(duration = 900) {
+    const term = document.getElementById("terminal");
+    term.classList.add("glitch");
+    await sleep(duration);
+    term.classList.remove("glitch");
+}
+
 async function typeLine(text, className = "", speed = 45) {
     const line = document.createElement("div");
     if (className) line.className = className;
@@ -99,7 +106,10 @@ async function intro() {
     await sleep(800);
     if (subjectName) {
         await typeLine("Welcome Back.", "", 60);
-        await sleep(600);
+        await glitchScreen(900);
+        await sleep(2500);
+        await typeLine("wait... you are not him.", "error", 50);
+        await sleep(800);
     }
 
     await typeLine("You're not him.", "", 50);
@@ -134,7 +144,7 @@ async function scan() {
     addLine("SUBJECT: " + (subjectName || "UNKNOWN"));
     await sleep(800);
     addLine("RESULT: NOT FFFOUNDDD", "error");
-    await sleep(1000);
+    await glitchScreen(1000);
 
 
     document.body.innerHTML = "";
