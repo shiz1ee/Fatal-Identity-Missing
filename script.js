@@ -141,7 +141,7 @@ async function scan() {
     document.body.style.background = "#000";
     await sleep(2000);
 
-    document.body.innerHTML = <main id= "terminal"><div id="output"></div></main>;
+    document.body.innerHTML = '<main id= "terminal"><div id="output"></div></main>';
     await typeLine("you shouldn't be here.", "error", 70);
 
     //TODOOOOo identiy choice screen uhj previos namer n al 
