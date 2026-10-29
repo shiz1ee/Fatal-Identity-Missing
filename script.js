@@ -48,6 +48,7 @@ function scrollToBottom() {
 }
 
 let audioCtx = null;
+let humGain = null;
 
 //f u broswer 
 
@@ -65,6 +66,7 @@ function startAudio() {
     filter.type = "lowpass";
     filter.frequency.value = 177;
     gain.gain.value = 0.07;
+    humGain = gain;
 
     osc.connect(filter).connect(gain).connect(audioCtx.destination);
     osc.start();
@@ -144,6 +146,7 @@ async function scan() {
         await sleep(400);
         output.lastChild.textContent += ".";
     }
+    await glitchScreen(2000);
     await nameSlam(subjectName || "UNKNOWN");
     await sleep(600);
 
@@ -157,6 +160,7 @@ async function scan() {
     blackout.classList.add("active");
     await sleep(2000);
     blackout.classList.remove("active");
+    output.innerHTML = "";
 
     await sleep(1000);
     await typeLine("You shouldn't be here.", "error", 70);
@@ -239,6 +243,7 @@ async function nameSlam(name) {
     slam.classList.add("active");
     document.body.classList.add("glitch");
 
+    await sleep(1500);
     playScare();
 
     for (let i = 0; i < 45; i++) {
@@ -249,10 +254,11 @@ async function nameSlam(name) {
         s.style.left = (Math.random() * 100) + "%";
         s.style.opacity = (0.2 + Math.random() * 0.6).toString();
         slam.appendChild(s);
-        await sleep(40);
+        await sleep(90);
     } 
 
-    await sleep(400);
+    fadeHum(1);
+    await sleep(1000);
 
     const big = document.createElement("span");
     big.className = "big";
@@ -264,6 +270,23 @@ async function nameSlam(name) {
     document.body.classList.remove("glitch");
     slam.classList.remove("active");
     slam.innerHTML = "";
+    restoreHum(0.5);
+}
+
+function fadeHum(seconds = 1) {
+    if (!humGain || !audioCtx) return;
+    const now = audioCtx.currentTime;
+    humGain.gain.cancelScheduledValues(now);
+    humGain.gain.setValueAtTime(humGain.gain.value, now);
+    humGain.gain.linearRampToValueAtTime(0, now + seconds);
+}
+
+function restoreHum(seconds = 0.5) {
+    if (!humGain || !audioCtx) return;
+    const now = audioCtx.currentTime;
+    humGain.gain.cancelScheduledValues(now);
+    humGain.gain.setValueAtTime(humGain.gain.value, now);
+    humGain.gain.linearRampToValueAtTime(0.07, now + seconds);
 }
 
 intro();
