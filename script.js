@@ -3,6 +3,15 @@ const promptEl = document.getElementById("prompt");
 const input = document.getElementById("input");
 const inputLine = document.getElementById("input-line");
 
+const scareVoice = new Audio("voice.mp3");
+scareVoice.volume = 0.9;
+
+function playScare() {
+    scareVoice.currentTime = 0;
+    scareVoice.play();
+}
+
+
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -112,10 +121,6 @@ async function intro() {
         await sleep(800);
     }
 
-    await typeLine("You're not him.", "", 50);
-    promptEl.textContent = "> ";
-    scrollToBottom();
-
     await typeLine("Identify YOURSELF.(ur name)", "", 60);
     promptEl.textContent = "";
     scrollToBottom();
@@ -139,23 +144,126 @@ async function scan() {
         await sleep(400);
         output.lastChild.textContent += ".";
     }
+    await nameSlam(subjectName || "UNKNOWN");
     await sleep(600);
 
     addLine("SUBJECT: " + (subjectName || "UNKNOWN"));
     await sleep(800);
     addLine("RESULT: NOT FFFOUNDDD", "error");
-    await glitchScreen(1000);
+    await glitchScreen(3000);
 
 
-    document.body.innerHTML = "";
-    document.body.style.background = "#000";
+    const blackout = document.getElementById("blackout");
+    blackout.classList.add("active");
     await sleep(2000);
+    blackout.classList.remove("active");
 
-    document.body.innerHTML = '<main id= "terminal"><div id="output"></div></main>';
-    await typeLine("you shouldn't be here.", "error", 70);
+    await sleep(1000);
+    await typeLine("You shouldn't be here.", "error", 70);
 
-    //TODOOOOo identiy choice screen uhj previos namer n al 
+    await sleep(1200);
+    await typeLine("You are an error.", "error", 60);
+    await sleep(1000);
+
+    await identityChoice();
     
+}
+
+function chooseOption(option) {
+    return new Promise((resolve) => {
+        const wrap = document.createElement("div");
+        wrap.className = "choices";
+
+        option.forEach((opt) => {
+            const btn = document.createElement("button");
+            btn.className = "choice";
+            btn.textContent = "[ " + opt.label + " ]";
+            btn.addEventListener("click", () => {
+                wrap.remove();
+                resolve(opt.value);
+            });
+            wrap.appendChild(btn);
+        });
+
+        output.appendChild(wrap);
+        scrollToBottom();
+    });
+}
+
+async function identityChoice() {
+
+    await typeLine("Identify yourself.", "", 60);
+    await sleep(400);
+    const rejections = [
+        "You.. You think you can fool me.?",
+        "That name is not yours anymore.",
+        "Look closer. That is not you.",
+    ];
+    let nameTries = 0;
+
+    while (true) {
+        const options = [];
+        if (subjectName && nameTries < rejections.length) {
+            options.push({ label: "I am " + subjectName, value: "name"});
+        }
+        options.push({label: "W-wait who am i?", value: "unknown"});
+
+        const choice = await chooseOption(options);
+        if (choice === "unknown") break;
+
+        addLine( "> I am " + subjectName);
+        await sleep(500);
+        addLine(rejections[nameTries], "error");
+        nameTries++;
+        await sleep(900);
+    }
+
+    await sleep(800);
+    await typeLine("...who are you, then?", "", 60);
+    //shaders 
+}
+
+function scaryVoice(text) {
+    if (!("speechSynthesis" in window)) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.pitch - 0.1;
+    u.rate - 0.6;
+    u.volume = 1;
+    speechSynthesis.speak(u);
+}
+
+async function nameSlam(name) {
+    const slam = document.getElementById("slam");
+    slam.innerHTML = "";
+    slam.classList.add("active");
+    document.body.classList.add("glitch");
+
+    playScare();
+
+    for (let i = 0; i < 45; i++) {
+        const s = document.createElement("span");
+        s.textContent = name;
+        s.style.fontSize = (1 + Math.random() * 3) + "rem";
+        s.style.top = (Math.random() * 100) + "%";
+        s.style.left = (Math.random() * 100) + "%";
+        s.style.opacity = (0.2 + Math.random() * 0.6).toString();
+        slam.appendChild(s);
+        await sleep(40);
+    } 
+
+    await sleep(400);
+
+    const big = document.createElement("span");
+    big.className = "big";
+    big.textContent = name;
+    slam.appendChild(big);
+
+    await sleep(2850);
+
+    document.body.classList.remove("glitch");
+    slam.classList.remove("active");
+    slam.innerHTML = "";
 }
 
 intro();
