@@ -3,6 +3,9 @@ A terminal website where you find yourself while trying to convince a machine th
 
 ![Intro screen](screenshot1.png)
 
+
+## [Demo](https://fatal-identity-missing.vercel.app)
+
 ## How to play 
 
 1. Type your name when the machine sks you to identify yourself.
