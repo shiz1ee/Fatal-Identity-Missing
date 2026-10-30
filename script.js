@@ -137,13 +137,12 @@ async function intro() {
     document.addEventListener("keydown", startAudio, {once:true});
 
     await sleep(800);
-    if (subjectName) {
-        await typeLine("Welcome Back.", "", 60);
+    
+    await typeLine("Welcome Back.", "", 60);
         await glitchScreen(900);
         await sleep(2500);
         await typeLine("wait... you are not him.", "error", 50);
         await sleep(800);
-    }
 
     await typeLine("Identify YOURSELF.", "", 60);
     await typeLine("(your name)", "narration", 40);
