@@ -11,7 +11,26 @@ function playScare() {
     scareVoice.play();
 }
 
+function playBulbOn() {
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
 
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(90, now);
+    osc.frequency.linearRampToValueAtTime(120, now+0.8);
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.linearRampToValueAtTime(0.03, now + 0.1);
+    g.gain.linearRampToValueAtTime(0.02, now = 0.9);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 1.3);
+    osc.connect(g).connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 1.4);
+
+    //swritch click
+    playKeyClick();
+}
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -287,6 +306,16 @@ function restoreHum(seconds = 0.5) {
     humGain.gain.cancelScheduledValues(now);
     humGain.gain.setValueAtTime(humGain.gain.value, now);
     humGain.gain.linearRampToValueAtTime(0.07, now + seconds);
+}
+
+async function bulbFlicker() {
+    playBulbOn();
+    const pattern = [0, 0.4, 0, 0.9, 0.1, 0.6, 0.2, 1];
+    for (const level of pattern) {
+        redLevel = level;
+        await sleep(90 + Math.random() * 120);
+    }
+    redLevel = 1;
 }
 
 intro();
