@@ -1,6 +1,8 @@
 # Fatal-Identity-Missing
 A terminal website where you find yourself while trying to convince a machine that you exist.
 
+![Intro screen](screenshot1.png)
+
 ## How to play 
 
 1. Type your name when the machine sks you to identify yourself.
