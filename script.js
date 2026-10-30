@@ -6,6 +6,9 @@ const inputLine = document.getElementById("input-line");
 const scareVoice = new Audio("voice.mp3");
 scareVoice.volume = 0.9;
 
+const dreadAudio = new Audio("dread.mp3");
+dreadAudio.volume = 0.2;
+
 function playScare() {
     scareVoice.currentTime = 0;
     scareVoice.play();
@@ -142,7 +145,8 @@ async function intro() {
         await sleep(800);
     }
 
-    await typeLine("Identify YOURSELF.(ur name)", "", 60);
+    await typeLine("Identify YOURSELF.", "", 60);
+    await typeLine("(your name)", "narration", 40);
     promptEl.textContent = "";
     scrollToBottom();
 
@@ -243,7 +247,32 @@ async function identityChoice() {
 
     await sleep(800);
     await typeLine("...who are you, then?", "", 60);
-    //shaders 
+
+    await sleep(1000);
+    await questionBeat();
+}
+
+async function questionBeat() {
+    await typeLine("You were here before.", "", 60);
+
+    const choice = await chooseOption([
+        {label: "I was here before?", value: "before" },
+        { label: "I don't remember", value: "forget" },
+        {label: "Who left it?", value: "who"},
+    ]);
+
+    const replies = {
+        before: ["> Iwas here before", "Yes. You alway say that."],
+        forget: ["> I don't remember", "Then look harder."],
+        who:    ["> Who left it?", "Nobody. YOU did."],
+    };
+
+    addLine(replies[choice][0]);
+    await sleep(700);
+    await typeLine(replies[choice][1], "error", 60);
+    await sleep(1200);
+
+    dreadSequence();
 }
 
 function scaryVoice(text) {
@@ -316,6 +345,50 @@ async function bulbFlicker() {
         await sleep(90 + Math.random() * 120);
     }
     redLevel = 1;
+}
+
+async function dreadSequence() {
+    const veil = document.getElementById("veil");
+    const dread = document.getElementById("dread");
+    const logo = document.getElementById("logo");
+
+    output.innerHTML = "";
+    document.getElementById("input-line").style.display = "none";
+
+    dreadAudio.currentTime = 0;
+    dreadAudio.play();
+
+    const ticks = 60;
+    const perTick = 2;
+
+    for (let i = 0; i < ticks; i++) {
+        for (let j = 0; j < perTick; j++) {
+            const s = document.createElement("span");
+            s.textContent = " who am i";
+            s.style.left = (Math.random() * 110 -5) + "%";
+            s.style.top = (Math.random() * 110 -5) + "%";
+            s.style.fontSize = (0.7 + Math.random() * 2.2) + "rem";
+            s.style.setProperty("--r", (Math.random() * 50 - 25) + "deg");
+            dread.appendChild(s);
+            requestAnimationFrame(() => {
+                s.style.opacity = (0.1 + Math.random() * 0.4).toString();
+            });
+        }
+
+        const progress = i / ticks;
+        veil.style.opacity = progress.toString();
+        dreadAudio.volume = Math.min(1, 0.2 + progress * 0.8);
+
+        await sleep(150);
+    }
+
+    fadeHum(1);
+    dreadAudio.pause();
+    veil.style.opacity = "0";
+    dread.innerHTML = "";
+    await sleep(4000);
+
+    logo.classList.add("show");
 }
 
 intro();

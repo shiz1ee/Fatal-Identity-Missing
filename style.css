@@ -143,3 +143,55 @@ html, body {
     z-index: 5;
     mix-blend-mode: screen;
 }
+
+#veil {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, rgba(70, 0,18, 0.25), rgba(25, 0 ,8, 0.97));
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+    z-index: 6;
+}
+
+#dread {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 7;
+}
+
+#dread span {
+    position: absolute;
+    color: #7a6266;
+    font-family: "Courier New", Courier, monospace;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.5s;
+    transform: translate(-50%, -50%) rotate(var(--r, 0deg));
+}
+
+#logo {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    color: #ff2a2a;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 3rem;
+    text-shadow: 0 0 14px #ff0000;
+    z-index: 30;
+}
+
+#logo.show {
+    display: flex;
+}
+
+#output .narration {
+    color: #8a8a8a;
+    font-style: italic;
+    text-shadow: none;
+}
